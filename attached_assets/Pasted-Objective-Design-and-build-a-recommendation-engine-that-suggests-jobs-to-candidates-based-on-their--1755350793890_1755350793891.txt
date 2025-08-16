@@ -1,0 +1,91 @@
+Objective
+Design and build a recommendation engine that suggests jobs to candidates based on their job preferences. The system should compare a candidate’s selected preferences (e.g., role type, location, salary, skills, industries) with the available job listings and return a ranked list of best-fit jobs.
+
+Problem Statement
+Every job seeker has different expectations and priorities while searching for a job — from preferred roles and industries to company size and values. Your task is to build an intelligent job recommendation system that matches these preferences to a job database and recommends the most suitable jobs with an associated match score or ranking.
+
+Inputs
+1. Candidate Job Preferences (JSON Format)
+{
+  "values": ["Impactful Work", "Mentorship & Career Development", "Work-Life Balance"],
+  "role_types": ["Full-Time", "Contract"],
+  "titles": ["UI/UX Designer", "Senior Product Designer"],
+  "locations": ["Remote in USA", "New York City"],
+  "role_level": ["Senior (5 to 8 years)"],
+  "leadership_preference": "Individual Contributor",
+  "company_size": ["51-200 Employees", "201-500 Employees"],
+  "industries": ["AI & Machine Learning", "Design"],
+  "skills": ["Figma", "UI/UX Design", "Wireframing", "Prototyping"],
+  "min_salary": 185000
+}
+
+
+
+2. Job Listings Database (JSON or CSV)
+Each job record includes:
+{
+  "job_id": "RED-456",
+  "title": "Senior UX Designer",
+  "company": "Reddit",
+  "location": "Remote in USA",
+  "salary_range": [146000, 232000],
+  "employment_type": "Full-Time",
+  "company_size": "51-200 Employees",
+  "industry": "AI & Machine Learning",
+  "required_skills": ["Figma", "Prototyping", "UX Research"],
+  "values_promoted": ["Impactful Work", "Transparency & Communication"],
+  "experience_required": "5-8 years",
+  "role_level": "Senior"
+}
+
+Output
+Your system should output a ranked list of job recommendations for each candidate:
+[
+  {
+    "job_id": "RED-456",
+    "job_title": "Senior UX Designer",
+    "match_score": 87
+  },
+  {
+    "job_id": "GGL-320",
+    "job_title": "Design Manager",
+    "match_score": 82
+  },
+  ...
+]
+You can choose to display:
+•	Match Score (0–100%)
+•	Breakdown by attributes (Skills: 80%, Role Match: 90%, Salary: 100%, etc.)
+
+
+
+
+Recommended Matching Criteria
+Attribute	Weight
+Skills	30%
+Title / Role Type	20%
+Location	15%
+Industry	10%
+Company Size	10%
+Values & Culture Fit	10%
+Salary Fit	5%
+You are free to adjust weights with justification.
+
+Expected Deliverables
+•	Python/Flask app 
+•	Endpoint or UI to input job preferences
+•	Returns list of recommended jobs with match scores
+•	Optional UI to show job cards 
+Bonus Features (Optional)
+•	Use semantic matching (e.g., “UX Designer” ≈ “Product Designer”)
+•	Allow candidate to update preferences dynamically
+•	Add filters (e.g., only remote jobs, min salary filter)
+•	Explainable match breakdown for each job
+
+Evaluation Criteria
+Criteria	Weight
+Relevance of recommendations	40%
+Matching logic accuracy	25%
+Code quality & modularity	15%
+Preference handling flexibility	10%
+Bonus (UI / semantic match)	10%
