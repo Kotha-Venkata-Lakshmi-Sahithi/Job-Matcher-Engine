@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}Find Your Perfect Job Match{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-bullseye text-primary me-3"></i>
+                Find Your Perfect Job Match
+            </h1>
+            <p class="lead text-muted">
+                Our intelligent recommendation engine matches your preferences with the best job opportunities. 
+                Tell us what you're looking for, and we'll find jobs that fit you perfectly.
+            </p>
+        </div>
+    </div>
+
+    <!-- Job Preferences Form -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-user-cog me-2"></i>
+                        Your Job Preferences
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="preferencesForm" method="POST" action="{{ url_for('recommend_jobs') }}">
+                        
+                        <!-- Job Titles -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-briefcase me-2 text-primary"></i>
+                                Preferred Job Titles
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="titles" value="UI/UX Designer" id="title1">
+                                        <label class="form-check-label" for="title1">UI/UX Designer</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="titles" value="Senior Product Designer" id="title2">
+                                        <label class="form-check-label" for="title2">Senior Product Designer</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="titles" value="Product Designer" id="title3">
+                                        <label class="form-check-label" for="title3">Product Designer</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="titles" value="Design Manager" id="title4">
+                                        <label class="form-check-label" for="title4">Design Manager</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-tools me-2 text-primary"></i>
+                                Your Skills
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="skills" value="Figma" id="skill1">
+                                        <label class="form-check-label" for="skill1">Figma</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="skills" value="UI/UX Design" id="skill2">
+                                        <label class="form-check-label" for="skill2">UI/UX Design</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="skills" value="Wireframing" id="skill3">
+                                        <label class="form-check-label" for="skill3">Wireframing</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="skills" value="Prototyping" id="skill4">
+                                        <label class="form-check-label" for="skill4">Prototyping</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="skills" value="User Research" id="skill5">
+                                        <label class="form-check-label" for="skill5">User Research</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                                Preferred Locations
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="locations" value="Remote in USA" id="loc1">
+                                        <label class="form-check-label" for="loc1">Remote in USA</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="locations" value="New York City" id="loc2">
+                                        <label class="form-check-label" for="loc2">New York City</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="locations" value="San Francisco, CA" id="loc3">
+                                        <label class="form-check-label" for="loc3">San Francisco, CA</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="locations" value="Seattle, WA" id="loc4">
+                                        <label class="form-check-label" for="loc4">Seattle, WA</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role Types -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-clock me-2 text-primary"></i>
+                                Employment Type
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="role_types" value="Full-Time" id="type1">
+                                        <label class="form-check-label" for="type1">Full-Time</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="role_types" value="Contract" id="type2">
+                                        <label class="form-check-label" for="type2">Contract</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Industries -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-industry me-2 text-primary"></i>
+                                Preferred Industries
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="industries" value="AI & Machine Learning" id="ind1">
+                                        <label class="form-check-label" for="ind1">AI & Machine Learning</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="industries" value="Technology" id="ind2">
+                                        <label class="form-check-label" for="ind2">Technology</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="industries" value="Fintech" id="ind3">
+                                        <label class="form-check-label" for="ind3">Fintech</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="industries" value="Entertainment" id="ind4">
+                                        <label class="form-check-label" for="ind4">Entertainment</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Company Size -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-building me-2 text-primary"></i>
+                                Company Size Preference
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="company_size" value="51-200 Employees" id="size1">
+                                        <label class="form-check-label" for="size1">51-200 Employees</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="company_size" value="201-500 Employees" id="size2">
+                                        <label class="form-check-label" for="size2">201-500 Employees</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="company_size" value="1000-5000 Employees" id="size3">
+                                        <label class="form-check-label" for="size3">1000-5000 Employees</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="company_size" value="10000+ Employees" id="size4">
+                                        <label class="form-check-label" for="size4">10000+ Employees</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Values -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-heart me-2 text-primary"></i>
+                                Important Values
+                            </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="values" value="Impactful Work" id="val1">
+                                        <label class="form-check-label" for="val1">Impactful Work</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="values" value="Mentorship & Career Development" id="val2">
+                                        <label class="form-check-label" for="val2">Mentorship & Career Development</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="values" value="Work-Life Balance" id="val3">
+                                        <label class="form-check-label" for="val3">Work-Life Balance</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="values" value="Innovation" id="val4">
+                                        <label class="form-check-label" for="val4">Innovation</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Minimum Salary -->
+                        <div class="mb-4">
+                            <label for="min_salary" class="form-label fw-semibold">
+                                <i class="fas fa-dollar-sign me-2 text-primary"></i>
+                                Minimum Salary (USD)
+                            </label>
+                            <input type="number" class="form-control" id="min_salary" name="min_salary" 
+                                   placeholder="e.g., 150000" step="1000">
+                            <div class="form-text">Leave blank if salary is not a primary concern</div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i>
+                                Find My Perfect Jobs
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">How Our Matching Works</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Smart Algorithm</h5>
+                    <p class="card-text">Our AI weighs your preferences using industry-proven criteria to find the best matches.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Match Scores</h5>
+                    <p class="card-text">Get detailed match scores and breakdowns to understand why each job fits you.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-filter fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Precise Filtering</h5>
+                    <p class="card-text">Filter by location, salary, company size, and more to find exactly what you want.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

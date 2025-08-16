@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}Your Job Recommendations{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5 fw-bold">
+                        <i class="fas fa-star text-warning me-3"></i>
+                        Your Job Recommendations
+                    </h1>
+                    <p class="lead text-muted">
+                        Found {{ recommendations|length }} jobs that match your preferences
+                    </p>
+                </div>
+                <div>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Update Preferences
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    {% if recommendations %}
+        <div class="row">
+            {% for job in recommendations %}
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <!-- Match Score Badge -->
+                        <div class="position-relative">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge rounded-pill fs-6 px-3 py-2 
+                                    {% if job.match_score >= 90 %}bg-success
+                                    {% elif job.match_score >= 75 %}bg-info
+                                    {% elif job.match_score >= 60 %}bg-warning
+                                    {% else %}bg-secondary
+                                    {% endif %}">
+                                    {{ job.match_score }}% Match
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <!-- Job Title and Company -->
+                            <div class="mb-3">
+                                <h4 class="card-title text-primary mb-1">{{ job.job_title }}</h4>
+                                <h6 class="text-muted">
+                                    <i class="fas fa-building me-2"></i>
+                                    {{ job.company }}
+                                </h6>
+                            </div>
+                            
+                            <!-- Job Details -->
+                            <div class="mb-3">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <small class="text-muted">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            {{ job.location }}
+                                        </small>
+                                    </div>
+                                    {% if job.salary_range %}
+                                    <div class="col-12">
+                                        <small class="text-muted">
+                                            <i class="fas fa-dollar-sign me-1"></i>
+                                            ${{ "{:,}".format(job.salary_range[0]) }} - ${{ "{:,}".format(job.salary_range[1]) }}
+                                        </small>
+                                    </div>
+                                    {% endif %}
+                                    <div class="col-12">
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ job.employment_type }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Skills -->
+                            {% if job.job_details.required_skills %}
+                            <div class="mb-3">
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for skill in job.job_details.required_skills[:4] %}
+                                        <span class="badge bg-secondary">{{ skill }}</span>
+                                    {% endfor %}
+                                    {% if job.job_details.required_skills|length > 4 %}
+                                        <span class="badge bg-light text-dark">+{{ job.job_details.required_skills|length - 4 }} more</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Match Breakdown -->
+                            <div class="mb-3">
+                                <div class="small text-muted mb-2">
+                                    <strong>Match Breakdown:</strong>
+                                </div>
+                                <div class="row g-1 small">
+                                    <div class="col-6">Skills: {{ job.breakdown.skills }}%</div>
+                                    <div class="col-6">Title: {{ job.breakdown.title }}%</div>
+                                    <div class="col-6">Location: {{ job.breakdown.location }}%</div>
+                                    <div class="col-6">Industry: {{ job.breakdown.industry }}%</div>
+                                    <div class="col-6">Company Size: {{ job.breakdown.company_size }}%</div>
+                                    <div class="col-6">Values: {{ job.breakdown.values }}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-grid">
+                                <button class="btn btn-sm btn-outline-primary" 
+                                        onclick="showJobDetails('{{ job.job_id }}')">
+                                    <i class="fas fa-eye me-1"></i>
+                                    View Full Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Summary Statistics -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-pie me-2"></i>
+                            Recommendation Summary
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <div class="fs-3 fw-bold text-success">
+                                    {{ recommendations|selectattr('match_score', 'ge', 80)|list|length }}
+                                </div>
+                                <div class="text-muted">Excellent Matches (80%+)</div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="fs-3 fw-bold text-info">
+                                    {{ recommendations|selectattr('match_score', 'ge', 60)|selectattr('match_score', 'lt', 80)|list|length }}
+                                </div>
+                                <div class="text-muted">Good Matches (60-79%)</div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="fs-3 fw-bold text-primary">
+                                    {% set avg_score = (recommendations|sum(attribute='match_score') / recommendations|length) %}
+                                    {{ "%.0f"|format(avg_score) }}%
+                                </div>
+                                <div class="text-muted">Average Match Score</div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <div class="fs-3 fw-bold text-warning">
+                                    {{ recommendations|length }}
+                                </div>
+                                <div class="text-muted">Total Recommendations</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- No Results -->
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                    <h3>No Jobs Found</h3>
+                    <p class="text-muted">
+                        We couldn't find any jobs matching your current preferences. 
+                        Try adjusting your criteria or removing some filters.
+                    </p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Update Your Preferences
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Job Details Modal -->
+<div class="modal fade" id="jobDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Job Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="jobDetailsContent">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const jobData = {{ recommendations|tojson }};
+
+function showJobDetails(jobId) {
+    const job = jobData.find(j => j.job_id === jobId);
+    if (!job) return;
+    
+    const details = job.job_details;
+    const content = document.getElementById('jobDetailsContent');
+    
+    content.innerHTML = `
+        <div class="mb-3">
+            <h4 class="text-primary">${details.title}</h4>
+            <h6 class="text-muted">${details.company}</h6>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <strong>Location:</strong> ${details.location}
+            </div>
+            <div class="col-md-6">
+                <strong>Employment Type:</strong> ${details.employment_type}
+            </div>
+            <div class="col-md-6">
+                <strong>Experience Required:</strong> ${details.experience_required || 'Not specified'}
+            </div>
+            <div class="col-md-6">
+                <strong>Role Level:</strong> ${details.role_level || 'Not specified'}
+            </div>
+        </div>
+        
+        ${details.salary_range ? `
+        <div class="mb-3">
+            <strong>Salary Range:</strong> 
+            $${details.salary_range[0].toLocaleString()} - $${details.salary_range[1].toLocaleString()}
+        </div>
+        ` : ''}
+        
+        <div class="mb-3">
+            <strong>Industry:</strong> ${details.industry}
+        </div>
+        
+        <div class="mb-3">
+            <strong>Company Size:</strong> ${details.company_size}
+        </div>
+        
+        ${details.required_skills && details.required_skills.length > 0 ? `
+        <div class="mb-3">
+            <strong>Required Skills:</strong>
+            <div class="mt-2">
+                ${details.required_skills.map(skill => `<span class="badge bg-secondary me-1">${skill}</span>`).join('')}
+            </div>
+        </div>
+        ` : ''}
+        
+        ${details.values_promoted && details.values_promoted.length > 0 ? `
+        <div class="mb-3">
+            <strong>Company Values:</strong>
+            <div class="mt-2">
+                ${details.values_promoted.map(value => `<span class="badge bg-info me-1">${value}</span>`).join('')}
+            </div>
+        </div>
+        ` : ''}
+        
+        <div class="mb-3">
+            <strong>Match Score:</strong> 
+            <span class="badge bg-success fs-6">${job.match_score}%</span>
+        </div>
+        
+        <div class="mb-3">
+            <strong>Match Breakdown:</strong>
+            <div class="mt-2 small">
+                <div>Skills: ${job.breakdown.skills}%</div>
+                <div>Title Match: ${job.breakdown.title}%</div>
+                <div>Location: ${job.breakdown.location}%</div>
+                <div>Industry: ${job.breakdown.industry}%</div>
+                <div>Company Size: ${job.breakdown.company_size}%</div>
+                <div>Values: ${job.breakdown.values}%</div>
+                <div>Salary: ${job.breakdown.salary}%</div>
+            </div>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('jobDetailsModal'));
+    modal.show();
+}
+</script>
+{% endblock %}
